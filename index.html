@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>juwiw</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffebf0;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+        }
+        #score, #timer {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #d6336c;
+        }
+        #timer {
+            top: 50px;
+        }
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828884.png');
+            background-size: cover;
+            cursor: pointer;
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            text-align: center;
+            border-radius: 10px;
+        }
+        .floating-heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/833/833472.png');
+            background-size: cover;
+            opacity: 0.3;
+            animation: float 5s infinite ease-in-out;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-20px); opacity: 0.6; }
+            100% { transform: translateY(0); opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Score: 0</div>
+    <div id="timer">Time Left: 15s</div>
+    <div id="popup">
+        <h2>camat juwii</h2>
+        <p>telah menamatkan gim bintang xixixi</p>
+        <img src="https://example.com/reward-qr.jpg" alt="Scan to claim your reward" style="width: 200px; height: 200px;">
+    </div>
+    
+    <script>
+        let score = 0;
+        let timeLeft = 15;
+        let maxScore = 100;
+        let gameInterval = setInterval(spawnHeart, 1000);
+        let timerInterval = setInterval(updateTimer, 1000);
+        
+        function spawnHeart() {
+            if (score >= maxScore) return;
+            
+            let heart = document.createElement("div");
+            heart.classList.add("heart");
+            document.body.appendChild(heart);
+            
+            let x = Math.random() * (window.innerWidth - 50);
+            let y = Math.random() * (window.innerHeight - 50);
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            
+            heart.addEventListener("click", () => {
+                if (score < maxScore) {
+                    score += 10;
+                    document.getElementById("score").innerText = `Score: ${score}`;
+                    heart.remove();
+                }
+                if (score >= maxScore) {
+                    endGame();
+                }
+            });
+            
+            setTimeout(() => {
+                if (document.body.contains(heart)) {
+                    heart.remove();
+                }
+            }, 2000);
+        }
+        
+        function updateTimer() {
+            timeLeft--;
+            document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+            
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+        
+        function endGame() {
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+            document.getElementById("popup").style.display = "block";
+        }
+        
+        function generateFloatingHearts() {
+            for (let i = 0; i < 10; i++) {
+                let floatingHeart = document.createElement("div");
+                floatingHeart.classList.add("floating-heart");
+                document.body.appendChild(floatingHeart);
+                
+                let x = Math.random() * window.innerWidth;
+                let y = Math.random() * window.innerHeight;
+                floatingHeart.style.left = `${x}px`;
+                floatingHeart.style.top = `${y}px`;
+            }
+        }
+        
+        generateFloatingHearts();
+    </script>
+</body>
+</html>
